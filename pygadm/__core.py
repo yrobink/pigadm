@@ -68,6 +68,7 @@ def download_gadm( country , version , opath , verbose ):
 	
 	## Download
 	if verbose:
+		print( f"Download '{country}'" )
 		with DownloadBar() as dwb:
 			urllib.request.urlretrieve( url , os.path.join( tmp , tfile ) , reporthook = dwb.update )
 	else:

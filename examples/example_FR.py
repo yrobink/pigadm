@@ -22,6 +22,7 @@
 ###############
 
 import sys,os
+import urllib
 
 import numpy  as np
 import pandas as pd
@@ -54,43 +55,73 @@ mpl.rcParams['font.monospace']  = "Liberation Mono"
 ## main ##
 ##########
 
+def load_data():
+	
+	ofile = os.path.join( os.path.dirname(os.path.abspath(__file__)) , "elevation_eobs.nc" )
+	if not os.path.isfile(ofile):
+		url = "https://knmi-ecad-assets-prd.s3.amazonaws.com/ensembles/data/Grid_0.1deg_reg_ensemble/elev_ens_0.1deg_reg_v26.0e.nc"
+		urllib.request.urlretrieve( url , ofile )
+	
+	return ofile
+
+
 if __name__ == "__main__":
 	
-	## Data
-	km  = 1000
-	dxy = 8*km
-	x   = np.arange(  100*km , 1250*km + dxy / 2 , dxy )
-	y   = np.arange( 6050*km , 7120*km + dxy / 2 , dxy )
-	X   = np.linspace( - np.pi , np.pi , x.size )
-	Y   = np.linspace( - np.pi , np.pi , y.size )
-	D   = Y.reshape(-1,1)**2 + X.reshape(1,-1)**2
-	H   = Y.reshape(-1,1)**2 - X.reshape(1,-1)**2
-	Z   = np.exp( - D / ( 2 * np.pi ) ) * np.cos(H)
+	## Load and open data
+	ifile = load_data()
+	idata = xr.open_dataset(ifile)
+	z     = idata.elevation.rename( latitude = "lat" ).rename( longitude = "lon" )
+	z     = z[(41 < z.lat) & (z.lat < 53),:]
+	z     = z[:,(-7 < z.lon) & (z.lon < 12)]
+	lat   = z.lat
+	lon   = z.lon
 	
-	featFRA0 = pygadm.feature_gadm( "FRA" , 0 , verbose = True )
-	featFRA1 = pygadm.feature_gadm( "FRA" , 1 , verbose = True )
-	featCHE0 = pygadm.feature_gadm( "CHE" , 0 , verbose = True )
+	## Build the colormap of topo
+	zmin  = -1000
+	zmax  = 4500
+	ztot  = zmax - zmin
+	n_neg = int( 10000 * - zmin / ztot )
+	n_pos = int( 10000 *   zmax / ztot )
+	
+	cut_neg = 0.18
+	cut_pos = 0.28
+	cmap    = mpl.colors.ListedColormap( np.vstack( (plt.cm.terrain(np.linspace(0,cut_neg,n_neg)),plt.cm.terrain(np.linspace(cut_pos,1,n_pos)))) )
+	
+	
+	## Load the features
+	countries0 = ["FRA","CHE","ESP","BEL","GBR","DEU","NLD","ITA"]
+	countries1 = ["FRA"]
+	feats0 = [ pygadm.feature_gadm( c , 0 , verbose = True ) for c in countries0 ]
+	feats1 = [ pygadm.feature_gadm( c , 1 , verbose = True ) for c in countries1 ]
 	
 	fig  = plt.figure( dpi = 120 )
-	grid = mplg.GridSpec( 1 + 3 , 1 )
-	ax   = fig.add_subplot( grid[0,0] , projection = ccrs.epsg(2154) )
+	grid = mplg.GridSpec( 1 + 1 + 3 , 1 + 2 + 1 )
 	
-	im = ax.pcolormesh( x , y , Z , transform = ccrs.epsg(2154) , shading = "nearest" , cmap = plt.cm.RdBu_r , vmin = -1 , vmax = 1 )
+	for i in range(2):
+		ax   = fig.add_subplot( grid[1,i+1] , projection = ccrs.epsg(2154) )
+		
+		im = ax.pcolormesh( lon , lat , z , transform = ccrs.PlateCarree() , shading = "nearest" , zorder = 0 , cmap = cmap , vmin = zmin , vmax = zmax )
+		
+		for f0 in feats0:
+			ax.add_feature( f0 , facecolor = "none" , edgecolor = "black" , linestyle = "-" , zorder = 2 )
+		if i == 0:
+			ax.set_title( "Level = 0" )
+		if i == 1:
+			ax.set_title( "Level = 1 (for France)" )
+			for f1 in feats1:
+				ax.add_feature( f1 , facecolor = "none" , edgecolor = "grey" , linestyle = ":" , zorder = 1 )
+		ax.set_extent( [-5,10,41,52] )
 	
-	ax.add_feature( featFRA0 , facecolor = "none" , edgecolor = "black" , linestyle = "-" )
-	ax.add_feature( featFRA1 , facecolor = "none" , edgecolor = "black" , linestyle = ":" )
-	ax.add_feature( featCHE0 , facecolor = "none" , edgecolor = "black" , linestyle = "-" )
-	ax.set_axis_off()
-	
-	cax = fig.add_subplot( grid[2,:].subgridspec( 1 , 3 , width_ratios = [0.1,0.8,0.1] )[0,1] )
-	plt.colorbar( mappable = im , cax = cax , orientation = "horizontal" )
+	cax = fig.add_subplot( grid[3,:].subgridspec( 1 , 3 , width_ratios = [0.1,0.8,0.1] )[0,1] )
+	plt.colorbar( mappable = im , cax = cax , orientation = "horizontal" , label = "Elevation from E-OBS" )
 	
 	## Width / height
 	mm       = 1. / 25.4
 	pt       = 1. / 72
-	width    = 120*mm
-	width_ax = width
-	widths   = [width_ax]
+	width    = 180*mm
+	w_lr     = 1*pt
+	width_ax = ( width - 2 * w_lr ) / 2
+	widths   = [w_lr] + [width_ax for _ in range(2)] + [w_lr]
 	
 	try:
 		ratio = ax.get_aspect() * ax.get_data_ratio()
@@ -98,10 +129,11 @@ if __name__ == "__main__":
 		ratio = ax.get_data_ratio()
 	
 	height_ax    = width_ax * ratio
+	height_tit   = 15*pt
 	height_top_c = 5*pt
 	height_cbar  = 10*pt
-	height_bot_c = 15*pt
-	heights      = [height_ax] + [height_top_c,height_cbar,height_bot_c]
+	height_bot_c = 30*pt
+	heights      = [height_tit] + [height_ax] + [height_top_c,height_cbar,height_bot_c]
 	height       = sum(heights)
 	
 	grid.set_height_ratios(heights)
@@ -110,7 +142,6 @@ if __name__ == "__main__":
 	fig.set_figheight(height)
 	
 	plt.subplots_adjust( left = 0 , right = 1 , bottom = 0 , top = 1 , wspace = 0 , hspace = 0 )
-	
-	plt.show()
+	plt.savefig( os.path.join( os.path.dirname(os.path.abspath(__file__)) , "example_FR.png" ) , dpi = 600 )
 	
 	print("Done")
