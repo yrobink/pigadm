@@ -91,8 +91,8 @@ if __name__ == "__main__":
 	## Load the features
 	countries0 = ["FRA","CHE","ESP","BEL","GBR","DEU","NLD","ITA"]
 	countries1 = ["FRA"]
-	feats0 = [ pygadm.feature_gadm( c , 0 , verbose = True ) for c in countries0 ]
-	feats1 = [ pygadm.feature_gadm( c , 1 , verbose = True ) for c in countries1 ]
+	feats0 = [ pygadm.feature( c , 0 ) for c in countries0 ]
+	feats1 = [ pygadm.feature( c , 1 ) for c in countries1 ]
 	
 	fig  = plt.figure( dpi = 120 )
 	grid = mplg.GridSpec( 1 + 1 + 3 , 1 + 2 + 1 )
