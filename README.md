@@ -1,7 +1,8 @@
 # pyGADM
 
 pyGADM (python GADM data) is a package to use features for cartopy from the
-[GADM](https://gadm.org/index.html) dataset.
+[GADM](https://gadm.org/index.html) dataset. A command line interface can
+be used to managed shapefile.
 
 
 ## Example
@@ -13,7 +14,7 @@ See the file `examples/example_FR.py`.
 
 ## License
 
-Copyright(c) 2022 Yoann Robin
+Copyright(c) 2022, 2023 Yoann Robin
 
 This file is part of pygadm.
 
