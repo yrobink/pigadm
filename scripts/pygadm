@@ -1,5 +1,6 @@
+#!/usr/bin/env python3
 
-## Copyright(c) 2022, 2023 Yoann Robin
+## Copyright(c) 2023 Yoann Robin
 ## 
 ## This file is part of pygadm.
 ## 
@@ -16,10 +17,14 @@
 ## You should have received a copy of the GNU General Public License
 ## along with pygadm.  If not, see <https://www.gnu.org/licenses/>.
 
+import sys
+from pygadm import start_pygadm
 
-## Release version
-from .__release import version as __version__
+##########
+## main ##
+##########
 
-from .__exec import start_pygadm
-from .__cartopy import feature
-
+if __name__ == "__main__":
+	
+	start_pygadm(sys.argv[1:])
+	

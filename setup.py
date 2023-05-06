@@ -28,11 +28,21 @@ exec("".join(lines))
 ## Required elements
 package_dir      = { "pygadm" : os.path.join( cpath , "pygadm" ) }
 requires         = [ "sys" , "os" , "tempfile" , "urllib" , "progressbar" , "zipfile" , "cartopy" ]
+scripts          = ["scripts/pygadm"]
 keywords         = ["GADM","shapefile","cartopy"]
 platforms        = ["linux","macosx"]
 packages         = [
     "pygadm",
     ]
+classifiers      = [
+	"Development Status :: 5 - Production/Stable",
+	"License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+	"Natural Language :: English",
+	"Operating System :: MacOS :: MacOS X",
+	"Operating System :: POSIX :: Linux",
+	"Programming Language :: Python :: 3",
+	"Topic :: Scientific/Engineering :: Mathematics"
+	]
 
 ## Now the setup
 from distutils.core import setup
@@ -41,13 +51,13 @@ setup(  name             = name,
         version          = version,
         description      = description,
         long_description = long_description,
-        author           = author,
-        author_email     = author_email,
+        author           = authors[0],
+        author_email     = authors_email[0],
         url              = src_url,
         packages         = packages,
         package_dir      = package_dir,
         requires         = requires,
-#        scripts          = scripts,
+        scripts          = scripts,
         license          = license,
         keywords         = keywords,
         platforms        = platforms
