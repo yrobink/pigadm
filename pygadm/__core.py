@@ -24,6 +24,7 @@ import sys
 import os
 import urllib.request
 import zipfile
+import progressbar
 
 import logging
 import datetime as dt
@@ -31,6 +32,28 @@ import argparse
 import tempfile
 import dataclasses
 from pathlib import Path
+
+from .__plot import plot_GADM
+
+class DownloadBar:
+	
+	def __init__( self ):
+		self.bar = None
+	
+	def __enter__( self ):
+		return self
+	
+	def __exit__( self , *args ):
+		print("")
+	
+	def update( self , b = 1 , bsize = 1 , tsize = None ):
+		
+		if self.bar is None and tsize is not None:
+			self.bar = progressbar.DataTransferBar( max_value = tsize )
+		
+		if self.bar is not None:
+			self.bar.update( min( b * bsize , tsize ) , force = True )
+
 
 
 @dataclasses.dataclass
@@ -114,7 +137,7 @@ class PyGADMParams:##{{{
 		
 		level,lfile = self.log
 		
-		## loglevel can be an integet
+		## loglevel can be an integer
 		try:
 			level = int(level)
 		except:
@@ -123,6 +146,8 @@ class PyGADMParams:##{{{
 		## If it is not an integer, raise an error
 		if not isinstance( level , int ): 
 			raise Exception( f"Invalid log level: {level}; nothing, an integer, 'debug', 'info', 'warning', 'error' or 'critical' expected" )
+		
+		self.log = (level,self.log[1])
 		
 		##
 		log_kwargs = {
@@ -146,10 +171,10 @@ class PyGADMParams:##{{{
 	def check(self):##{{{
 		
 		## Check the command
-		if not self.cmd in ["load","list","path",None]:
+		if not self.cmd in ["load","list","path","plot",None]:
 			raise Exception( f"Bad command '{self.cmd}', available commands are 'load', 'list', 'path'" )
 		
-		if self.cmd in ["load","path"] and len(self.arg) == 0:
+		if self.cmd in ["load","path","plot"] and len(self.arg) == 0:
 			raise Exception( f"Empty arguments for '{self.cmd}' command" )
 			
 		if self.cmd in ["path"] and not (len(self.arg) == 2):
@@ -186,7 +211,12 @@ class PyGADMParams:##{{{
 			opath = self.iopath / f"gadm{self.version}" / country
 			
 			## Download file
-			urllib.request.urlretrieve( self.url(country) , os.path.join( self.tmp , zfile ) )
+			if self.log[1] is None and self.log[0] < 30:
+				with DownloadBar() as dwb:
+					urllib.request.urlretrieve( self.url(country) , os.path.join( self.tmp , zfile ) , reporthook = dwb.update )
+			else:
+				urllib.request.urlretrieve( self.url(country) , os.path.join( self.tmp , zfile ) )
+			
 			
 			## Remove old files
 			if os.path.isdir(opath):
@@ -216,10 +246,11 @@ class PyGADMParams:##{{{
 	
 	def build_path( self , country , level ):##{{{
 		
+		arg = tuple(self.arg)
 		if not country in os.listdir( self.iopath / f"gadm{self.version}"):
 			self.arg = [country]
 			self._run_load()
-		self.arg = [level]
+		self.arg = tuple(arg)
 		
 		files = [f for f in os.listdir( self.iopath / f"gadm{self.version}" / country ) if f.split(".")[-1] == "shp" ]
 		files.sort()
@@ -230,7 +261,7 @@ class PyGADMParams:##{{{
 		
 		return self.iopath / f"gadm{self.version}" / country / files[levels.index(level)]
 	##}}}
-
+	
 	def _run_path(self):##{{{
 		
 		country = self.arg[0]
@@ -241,6 +272,10 @@ class PyGADMParams:##{{{
 	
 	##}}}
 	
+	def _run_plot(self):##{{{
+		plot_GADM(self)
+	##}}}
+	
 	def run( self ):##{{{
 		
 		if self.cmd == "load":
@@ -249,6 +284,8 @@ class PyGADMParams:##{{{
 			self._run_list()
 		if self.cmd == "path":
 			self._run_path()
+		if self.cmd == "plot":
+			self._run_plot()
 	##}}}
 	
 ##}}}

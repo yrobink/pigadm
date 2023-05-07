@@ -23,15 +23,9 @@
 import sys
 import os
 
-cartopy_on = True
-cartopy_error = None
-try:
-	from cartopy.feature import ShapelyFeature
-	from cartopy.io.shapereader import Reader
-	from cartopy.crs import PlateCarree
-except ModuleNotFoundError as e:
-	cartopy_on = False
-	cartopy_error = e
+from cartopy.feature import ShapelyFeature
+from cartopy.io.shapereader import Reader
+from cartopy.crs import PlateCarree
 
 from .__core import pygadmParams
 
@@ -64,9 +58,6 @@ def feature( country , level = 0 , **kwargs ):
 	Original data are available at: https://gadm.org/index.html
 	
 	"""
-	
-	if not cartopy_on:
-		raise cartopy_error
 	
 	shpfile = pygadmParams.build_path( country , str(level) )
 	
