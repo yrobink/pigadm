@@ -19,7 +19,7 @@
 version_major = 2
 version_minor = 1
 version_patch = 0
-version_extra = "r0"
+version_extra = "r1"
 version       = f"{version_major}.{version_minor}.{version_patch}{version_extra}"
 
 

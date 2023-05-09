@@ -47,7 +47,7 @@ list
     List countries downloaded
 path COUNTRY LEVEL
     Return path to the file of the COUNTRY a the level LEVEL
-plot COUNTRY [FILE]
+plot COUNTRY LEVEL [FILE]
     Plot the shapefile of country using cartopy. If given, save in the file FILE
 --log [loglevel,logfile]
     Set the log level, default is 'warning'. If '--log' is passed without

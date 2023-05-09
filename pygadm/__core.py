@@ -246,11 +246,13 @@ class PyGADMParams:##{{{
 	
 	def build_path( self , country , level ):##{{{
 		
-		arg = tuple(self.arg)
 		if not country in os.listdir( self.iopath / f"gadm{self.version}"):
+			if self.arg is not None:
+				arg = tuple(self.arg)
 			self.arg = [country]
 			self._run_load()
-		self.arg = tuple(arg)
+			if arg is not None:
+				self.arg = tuple(arg)
 		
 		files = [f for f in os.listdir( self.iopath / f"gadm{self.version}" / country ) if f.split(".")[-1] == "shp" ]
 		files.sort()
