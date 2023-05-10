@@ -168,6 +168,11 @@ class PiGADMParams:##{{{
 		return f"https://geodata.ucdavis.edu/gadm/gadm{self.version}/shp/gadm{self.version_major}{self.version_minor}_{country}_shp.zip"
 	##}}}
 	
+	def check_path(self):##{{{
+		if not os.path.isdir(self.iopath / f"gadm{self.version}"):
+			os.makedirs(self.iopath / f"gadm{self.version}")
+	##}}}
+	
 	def check(self):##{{{
 		
 		## Check the command
@@ -293,4 +298,6 @@ class PiGADMParams:##{{{
 ##}}}
 
 pigadmParams = PiGADMParams()
+pigadmParams.check_path()
+
 
