@@ -45,7 +45,7 @@ classifiers      = [
 	]
 
 ## Now the setup
-from distutils.core import setup
+from setuptools import setup
 
 setup(  name             = name,
         version          = version,
