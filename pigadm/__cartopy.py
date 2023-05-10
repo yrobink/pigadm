@@ -1,20 +1,20 @@
 
 ## Copyright(c)  2023 Yoann Robin
 ## 
-## This file is part of pygadm.
+## This file is part of pigadm.
 ## 
-## pygadm is free software: you can redistribute it and/or modify
+## pigadm is free software: you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
 ## the Free Software Foundation, either version 3 of the License, or
 ## (at your option) any later version.
 ## 
-## pygadm is distributed in the hope that it will be useful,
+## pigadm is distributed in the hope that it will be useful,
 ## but WITHOUT ANY WARRANTY; without even the implied warranty of
 ## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ## GNU General Public License for more details.
 ## 
 ## You should have received a copy of the GNU General Public License
-## along with pygadm.  If not, see <https://www.gnu.org/licenses/>.
+## along with pigadm.  If not, see <https://www.gnu.org/licenses/>.
 
 #############
 ## Imports ##
@@ -27,7 +27,7 @@ from cartopy.feature import ShapelyFeature
 from cartopy.io.shapereader import Reader
 from cartopy.crs import PlateCarree
 
-from .__core import pygadmParams
+from .__core import pigadmParams
 
 
 ###############
@@ -36,7 +36,7 @@ from .__core import pygadmParams
 
 def feature( country , level = 0 , **kwargs ):
 	"""
-	pygadm.feature
+	pigadm.feature
 	==============
 	
 	Arguments
@@ -59,7 +59,7 @@ def feature( country , level = 0 , **kwargs ):
 	
 	"""
 	
-	shpfile = pygadmParams.build_path( country , str(level) )
+	shpfile = pigadmParams.build_path( country , str(level) )
 	
 	## Build feat kwargs
 	fkwargs = { "edgecolor" : "black" , "facecolor" : "none" , "linestyle" : "-" if level == 0 else ":" }

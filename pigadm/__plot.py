@@ -1,20 +1,20 @@
 
 ## Copyright(c)  2023 Yoann Robin
 ## 
-## This file is part of pygadm.
+## This file is part of pigadm.
 ## 
-## pygadm is free software: you can redistribute it and/or modify
+## pigadm is free software: you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
 ## the Free Software Foundation, either version 3 of the License, or
 ## (at your option) any later version.
 ## 
-## pygadm is distributed in the hope that it will be useful,
+## pigadm is distributed in the hope that it will be useful,
 ## but WITHOUT ANY WARRANTY; without even the implied warranty of
 ## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ## GNU General Public License for more details.
 ## 
 ## You should have received a copy of the GNU General Public License
-## along with pygadm.  If not, see <https://www.gnu.org/licenses/>.
+## along with pigadm.  If not, see <https://www.gnu.org/licenses/>.
 
 #############
 ## Imports ##
@@ -40,7 +40,7 @@ import cartopy.feature as cf
 ## Functions ##
 ###############
 
-def plot_GADM( pygadmParams ):
+def plot_GADM( pigadmParams ):
 	
 	warnings.simplefilter("ignore")
 	
@@ -54,12 +54,12 @@ def plot_GADM( pygadmParams ):
 	
 	
 	try:
-		country = pygadmParams.arg[0]
-		level   = pygadmParams.arg[1]
+		country = pigadmParams.arg[0]
+		level   = pigadmParams.arg[1]
 	except:
-		raise Exception( f"Invalid input arguments: '{pygadmParams.arg}'" )
+		raise Exception( f"Invalid input arguments: '{pigadmParams.arg}'" )
 	
-	shpfile = pygadmParams.build_path( country , str(level) )
+	shpfile = pigadmParams.build_path( country , str(level) )
 	
 	## Build feat kwargs
 	fkwargs = { "edgecolor" : "red" , "facecolor" : "none" , "linestyle" : "-" }
@@ -135,7 +135,7 @@ def plot_GADM( pygadmParams ):
 	plt.subplots_adjust( left = 0 , right = 1 , bottom = 0 , top = 1 , hspace = 0 , wspace = 0 )
 	
 	try:
-		plt.savefig( pygadmParams.arg[2] , dpi = 600 )
+		plt.savefig( pigadmParams.arg[2] , dpi = 600 )
 	except:
 		plt.show()
 	plt.close(fig)

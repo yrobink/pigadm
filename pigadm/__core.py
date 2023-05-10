@@ -1,20 +1,20 @@
 
 ## Copyright(c) 2022, 2023 Yoann Robin
 ## 
-## This file is part of pygadm.
+## This file is part of pigadm.
 ## 
-## pygadm is free software: you can redistribute it and/or modify
+## pigadm is free software: you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
 ## the Free Software Foundation, either version 3 of the License, or
 ## (at your option) any later version.
 ## 
-## pygadm is distributed in the hope that it will be useful,
+## pigadm is distributed in the hope that it will be useful,
 ## but WITHOUT ANY WARRANTY; without even the implied warranty of
 ## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ## GNU General Public License for more details.
 ## 
 ## You should have received a copy of the GNU General Public License
-## along with pygadm.  If not, see <https://www.gnu.org/licenses/>.
+## along with pigadm.  If not, see <https://www.gnu.org/licenses/>.
 
 #############
 ## Imports ##
@@ -57,14 +57,14 @@ class DownloadBar:
 
 
 @dataclasses.dataclass
-class PyGADMParams:##{{{
+class PiGADMParams:##{{{
 	
 	abort         : bool                = False
 	error         : Exception | None    = None
 	help          : bool                = False
 	log           : tuple[str,str|None] = ("WARNING",None)
 	LINE          : str                 = "=" * 80
-	iopath        : Path                = Path( os.environ.get( "XDG_DATA_HOME" , Path.home() / ".local" / "share" ) ) / "pygadm"
+	iopath        : Path                = Path( os.environ.get( "XDG_DATA_HOME" , Path.home() / ".local" / "share" ) ) / "pigadm"
 	version_major : int                 = 4
 	version_minor : int                 = 1
 	
@@ -292,5 +292,5 @@ class PyGADMParams:##{{{
 	
 ##}}}
 
-pygadmParams = PyGADMParams()
+pigadmParams = PiGADMParams()
 
