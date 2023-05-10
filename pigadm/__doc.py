@@ -33,7 +33,7 @@ from .__release import authors_doc
 
 doc = """\
 
-pyGADM ({})
+pigadm ({})
 {}
 
 {}
