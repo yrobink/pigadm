@@ -27,7 +27,7 @@ exec("".join(lines))
 
 ## Required elements
 package_dir      = { "pigadm" : os.path.join( cpath , "pigadm" ) }
-requires         = [ "sys" , "os" , "tempfile" , "urllib" , "progressbar" , "zipfile" , "cartopy" ]
+requires         = [ "sys" , "os" , "tempfile" , "urllib" , "progressbar2" , "zipfile" , "cartopy" ]
 scripts          = ["scripts/pigadm"]
 keywords         = ["GADM","shapefile","cartopy"]
 platforms        = ["linux","macosx"]
