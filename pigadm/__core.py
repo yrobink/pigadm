@@ -62,7 +62,7 @@ class PiGADMParams:##{{{
 	abort         : bool                = False
 	error         : Exception | None    = None
 	help          : bool                = False
-	log           : tuple[str,str|None] = ("WARNING",None)
+	log           : tuple[str,str|None] = (30,None)
 	LINE          : str                 = "=" * 80
 	iopath        : Path                = Path( os.environ.get( "XDG_DATA_HOME" , Path.home() / ".local" / "share" ) ) / "pigadm"
 	version_major : int                 = 4
