@@ -1,4 +1,4 @@
-# pyGADM
+# piGADM
 
 piGADM (Python Interface to GADM data) is a package to use features for cartopy from the
 [GADM](https://gadm.org/index.html) dataset. A command line interface can
