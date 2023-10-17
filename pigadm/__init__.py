@@ -22,4 +22,5 @@ from .__release import version as __version__
 
 from .__exec import start_pigadm
 from .__cartopy import feature
+from .__cartopy import path
 

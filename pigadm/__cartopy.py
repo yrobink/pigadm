@@ -34,6 +34,9 @@ from .__core import pigadmParams
 ## Functions ##
 ###############
 
+def path( country , level ):
+	return pigadmParams.build_path( country , str(level) )
+
 def feature( country , level = 0 , **kwargs ):
 	"""
 	pigadm.feature
@@ -59,7 +62,7 @@ def feature( country , level = 0 , **kwargs ):
 	
 	"""
 	
-	shpfile = pigadmParams.build_path( country , str(level) )
+	shpfile = path( country , level )
 	
 	## Build feat kwargs
 	fkwargs = { "edgecolor" : "black" , "facecolor" : "none" , "linestyle" : "-" if level == 0 else ":" }
